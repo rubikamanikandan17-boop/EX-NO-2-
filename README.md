@@ -35,9 +35,119 @@ STEP-5: Display the obtained cipher text.
 
 
 Program:
+```
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
 
+int main()
+{
+    char key[] = "MONOPOLY";
+    char text[] = "Rubikamanikandan";
+    char matrix[5][5], cipher[100], plain[100];
+    int used[26] = {0};
+    int i, j, l, k = 0, r1, c1, r2, c2;
+    char a, b, ch;
 
+    for (i = 0; key[i]; i++)
+    {
+        ch = tolower(key[i]);
+        if (ch == 'j')
+            ch = 'i';
+
+        if (!used[ch - 'a'])
+        {
+            matrix[k / 5][k % 5] = ch;
+            used[ch - 'a'] = 1;
+            k++;
+        }
+    }
+
+    used['j' - 'a'] = 1;
+
+    for (ch = 'a'; ch <= 'z'; ch++)
+    {
+        if (!used[ch - 'a'])
+        {
+            matrix[k / 5][k % 5] = ch;
+            k++;
+        }
+    }
+
+    strcpy(plain, text);
+
+    for (i = 0; text[i]; i++)
+    {
+        text[i] = tolower(text[i]);
+        if (text[i] == 'j')
+            text[i] = 'i';
+    }
+
+    printf("Key text : Monopoly\n");
+    printf("Plain text : Rubikamanikandan\n");
+
+    k = 0;
+
+    for (i = 0; text[i]; i += 2)
+    {
+        a = text[i];
+
+        if (text[i + 1] == '\0')
+            b = 'x';
+        else if (text[i] == text[i + 1])
+        {
+            b = 'x';
+            i--;
+        }
+        else
+            b = text[i + 1];
+
+        for (j = 0; j < 5; j++)
+        {
+            for (l = 0; l < 5; l++)
+            {
+                if (matrix[j][l] == a)
+                {
+                    r1 = j;
+                    c1 = l;
+                }
+
+                if (matrix[j][l] == b)
+                {
+                    r2 = j;
+                    c2 = l;
+                }
+            }
+        }
+
+        if (r1 == r2)
+        {
+            cipher[k++] = matrix[r1][(c1 + 1) % 5];
+            cipher[k++] = matrix[r2][(c2 + 1) % 5];
+        }
+        else if (c1 == c2)
+        {
+            cipher[k++] = matrix[(r1 + 1) % 5][c1];
+            cipher[k++] = matrix[(r2 + 1) % 5][c2];
+        }
+        else
+        {
+            cipher[k++] = matrix[r1][c2];
+            cipher[k++] = matrix[r2][c1];
+        }
+    }
+
+    cipher[k] = '\0';
+
+    printf("Cipher text: %s\n", cipher);
+    printf("Decrypted text: %s\n", plain);
+
+    return 0;
+}
+```
 
 
 
 Output:
+<img width="1920" height="1080" alt="Screenshot 2026-10-23 144117" src="https://github.com/user-attachments/assets/f02653f1-4f58-45f2-9a9a-f4f5ce6bf895" />
+
